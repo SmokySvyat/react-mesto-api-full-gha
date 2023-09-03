@@ -1,0 +1,14 @@
+.footer {
+    min-height: 145px;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+@media screen and (max-width: 600px) {
+    .footer {
+        min-height: auto;
+        padding: 48px 19px 0;
+    }
+}

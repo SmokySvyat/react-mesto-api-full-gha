@@ -1,0 +1,22 @@
+.card__del {
+    width: 18px;
+    height: 19px;
+    padding: 0;
+    margin: 20px 0 0 4px;
+    border: none;
+    background-color: unset;
+    background-image: url(../../../images/ico__trash.svg);
+    z-index: 1;
+    grid-column: 2;
+    grid-row: 1;
+    -webkit-transition: 0.3s ease;
+    -o-transition: 0.3s ease;
+    transition: 0.3s ease;
+}
+
+.card__del:hover {
+    opacity: .6;
+    -webkit-transition: 0.3s ease;
+    -o-transition: 0.3s ease;
+    transition: 0.3s ease;
+}

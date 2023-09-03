@@ -1,0 +1,25 @@
+.card__like {
+    border: none;
+    padding: 0;
+    margin: 22px 20px 0 0;
+    width: 22px;
+    height: 19px;
+
+    grid-column: 2;
+    grid-row: 2;
+
+    background-color: #fff;
+    background-image: url(../../../images/ico__like.svg);
+    cursor: pointer;
+
+    -webkit-transition: 0.3s ease;
+    -o-transition: 0.3s ease;
+    transition: 0.3s ease;
+}
+
+.card__like:hover {
+    opacity: 0.5;
+    -webkit-transition: 0.3s ease;
+    -o-transition: 0.3s ease;
+    transition: 0.3s ease;
+}

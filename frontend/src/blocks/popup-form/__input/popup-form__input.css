@@ -1,0 +1,22 @@
+.popup-form__input {
+    box-sizing: border-box;
+    width: 358px;
+    height: 27px;
+    margin: 3px 0 0 0;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 400;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+}
+
+@media screen and (max-width: 600px) {
+    .popup-form__input {
+        width: 238px;
+        margin: 0;
+    }
+
+    .popup-form__input:nth-of-type(2) {
+        margin: 30px 0 45px 0;
+    }
+}

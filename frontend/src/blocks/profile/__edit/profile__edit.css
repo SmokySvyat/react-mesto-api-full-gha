@@ -1,0 +1,38 @@
+.profile__edit {
+    grid-column: 3;
+    grid-row: 1;
+    width: 24px;
+    height: 24px;
+    margin: 8px 19px;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    display: flex;
+    background-image: url(../../../images/ico__pencil.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #000;
+    border: 1px solid #fff;
+    align-self: end;
+    cursor: pointer;
+    -webkit-transition: 0.3s ease;
+    -o-transition: 0.3s ease;
+    transition: 0.3s ease;
+}
+
+.profile__edit:hover {
+    opacity: 0.6;
+    -webkit-transition: 0.3s ease;
+    -o-transition: 0.3s ease;
+    transition: 0.3s ease;
+}
+
+@media screen and (max-width: 600px) {
+    .profile__edit {
+        padding: 4px;
+        width: 18px;
+        height: 18px;
+        justify-self: end;
+        grid-column: 1;
+        grid-row: 2;
+    }
+}

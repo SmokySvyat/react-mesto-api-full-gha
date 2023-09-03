@@ -1,0 +1,30 @@
+.root {
+    background-color: #000;
+    font-family: 'Inter', Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #fff;
+    max-width: 1280px;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    margin: 0 auto;
+    padding: 45px 200px 0 200px;
+}
+
+@media screen and (max-width: 917px) {
+    .root {
+        padding: 28px 0 36px 0;
+    }
+}

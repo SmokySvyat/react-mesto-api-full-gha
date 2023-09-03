@@ -1,0 +1,30 @@
+.popup-form__btn {
+    width: 358px;
+    min-height: 50px;
+    margin: 15px 0 0 0;
+    border-radius: 2px;
+    border: 0;
+    background-color: #000;
+    color: #fff;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 400;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.popup-form__btn:not([disabled]):hover {
+    opacity: 0.8;
+    transition: all 0.2s ease-in-out;
+}
+
+@media screen and (max-width: 600px) {
+    .popup-form__btn {
+        min-height: 46px;
+        width: 238px;
+        margin: 0;
+        font-size: 14px;
+        line-height: 17px;
+    }
+}

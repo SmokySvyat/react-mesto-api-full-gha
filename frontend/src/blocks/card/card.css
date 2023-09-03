@@ -1,0 +1,15 @@
+.card {
+    margin: 0 auto;
+    max-width: 282px;
+    width: 100%;
+    min-height: 361px;
+
+    background-color: #fff;
+    color: #000;
+    border-radius: 10px;
+
+    display: grid;
+    grid-template-columns: calc(282px - 42px) 42px;
+    grid-template-rows: 1fr 79px;
+    /* gap: 25px; */
+}

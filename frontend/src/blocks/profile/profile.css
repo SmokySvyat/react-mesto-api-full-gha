@@ -1,0 +1,19 @@
+.profile {
+    max-width: inherit;
+    width: 100%;
+    padding: 40px 0 51px 0;
+    display: grid;
+    grid-template-columns: 120px auto 1fr 150px;
+    grid-template-rows: repeat(2, auto);
+    row-gap: 8px;
+}
+
+@media screen and (max-width: 600px) {
+    .profile {
+        box-sizing: border-box;
+        padding: 42px 19px 36px 19px;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        row-gap: 0;
+    }
+}

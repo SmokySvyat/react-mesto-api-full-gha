@@ -1,32 +1,28 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
-const usersRouter = require('./routes/users');
-const cardsRouter = require('./routes/cards');
+const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
+const errorHandler = require('./middlewres/error');
+const router = require('./routes');
+const { requestLogger, errorLogger } = require('./middlewres/logger');
 
 const { PORT = 3000 } = process.env;
 const app = express();
+app.use(requestLogger);
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64ce3846504f1b8cff48486e',
-  };
+app.use(bodyParser.json());
+app.use(cookieParser());
 
-  next();
-});
+app.use(router);
 
-app.use(bodyParser);
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
+app.use(errorLogger);
 
-app.use('/*', (req, res) => {
-  res.status(404).send({ message: 'Такой страницы не существует' });
-});
+app.use(errors());
+app.use(errorHandler);
 
-mongoose.connect('mongodb://127.0.0.1:27017/testdb')
-  .then(() => console.log('Connected to the server'))
-  .catch((err) => console.log(err));
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
+  .then(() => console.log('Connected to the data base'));
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

@@ -1,78 +1,60 @@
 const { ValidationError } = require('mongoose').Error;
 const {
-  BAD_REQUEST_CODE, ERROR_NOT_FOUND, INTERNAL_CODE, STATUS_OK, INVAILD_ID,
+  STATUS_OK, INVAILD_ID, CREATED,
 } = require('../utils/constants');
+const BadRequest = require('../utils/errors/BadRequest');
+const NotFound = require('../utils/errors/NotFound');
+const Forbidden = require('../utils/errors/Forbiden');
 const Card = require('../models/card');
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { _id } = req.user;
   const { name, link } = req.body;
   Card.create({ name, link, owner: _id })
     .then((card) => {
       res
-        .status(STATUS_OK)
+        .status(CREATED)
         .send(card);
     })
     .catch((err) => {
       if (err instanceof ValidationError) {
-        // eslint-disable-next-line no-console
-        console.log(err);
-        res
-          .status(BAD_REQUEST_CODE)
-          .send({ message: 'Переданы некорректные данные при создании карточки.' });
+        next(new BadRequest('Переданы некорректные данные при создании карточки.'));
       } else {
-        res
-          .status(INTERNAL_CODE)
-          .send({ message: 'Ошибка по умолчанию.' });
+        next(err);
       }
     });
 };
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => {
       res
         .status(STATUS_OK)
         .send(cards);
     })
-    .catch(() => {
-      res
-        .status(INTERNAL_CODE)
-        .send({ message: 'Ошибка по умолчанию.' });
-    });
+    .catch(next);
 };
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  Card.findByIdAndRemove(cardId)
-    .orFail(new Error(INVAILD_ID))
+  const { _id } = req.user;
+  Card.findById(cardId)
+    .orFail(new NotFound('Карточка с указанным id не найдена'))
     .then((card) => {
-      res
-        .status(STATUS_OK)
-        .send(card);
-    })
-    .catch((err) => {
-      if (err.message === INVAILD_ID) {
-        res
-          .status(ERROR_NOT_FOUND)
-          .send({ message: 'Запрашиваемая карточка не найдена' });
-      } else if (err.name === 'CastError') {
-        res
-          .status(BAD_REQUEST_CODE)
-          .send({ message: 'Данные переданны некоректно' });
-      } else {
-        res
-          .status(INTERNAL_CODE)
-          .send({ message: 'Ошибка по умолчанию.' });
+      if (card.owner.toString() !== _id) {
+        return Promise.reject(new Forbidden('У пользователя нет возможности удалять карточки других пользователей'));
       }
-    });
+      return Card.deleteOne(card)
+        .then(() => res.send({ message: 'Карточка удалена' }));
+    })
+    .catch(next);
 };
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   const { _id } = req.user;
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: _id } },
     { new: true, runValidators: true },
   )
-    .orFail(new Error(INVAILD_ID))
+    .orFail(new NotFound({ message: 'Карточка с указанным id не найдена' }))
     .then((card) => {
       res
         .status(STATUS_OK)
@@ -80,21 +62,15 @@ const likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.message === INVAILD_ID) {
-        res
-          .status(ERROR_NOT_FOUND)
-          .send({ message: 'Запрашиваемая карточка не найдена' });
+        next(new NotFound('Запрашиваемая карточка не найдена'));
       } else if (err.name === 'CastError') {
-        res
-          .status(BAD_REQUEST_CODE)
-          .send({ message: 'Данные преданны некоректно' });
+        next(new BadRequest('Данные переданны некоректно'));
       } else {
-        res
-          .status(INTERNAL_CODE)
-          .send({ message: 'Ошибка по умолчанию.' });
+        next(err);
       }
     });
 };
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   const { _id } = req.user;
   Card.findByIdAndUpdate(
     req.params.cardId,
@@ -109,17 +85,11 @@ const dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.message === INVAILD_ID) {
-        res
-          .status(ERROR_NOT_FOUND)
-          .send({ message: 'Запрашиваемая карточка не найдена' });
+        next(new NotFound('Запрашиваемая карточка не найдена'));
       } else if (err.name === 'CastError') {
-        res
-          .status(BAD_REQUEST_CODE)
-          .send({ message: 'Данные переданны некоректно' });
+        next(new BadRequest('Данные переданны некоректно'));
       } else {
-        res
-          .status(INTERNAL_CODE)
-          .send({ message: 'Ошибка по умолчанию.' });
+        next(err);
       }
     });
 };

@@ -6,12 +6,12 @@
   
 Пожалуйста, прикрепите в это описание ссылку на сайт, размещенный на Яндекс.Облаке.
 
-Адрес репозитория: https://github.com/...
+Адрес репозитория: https://github.com/SmokySvyat/react-mesto-api-full-gha
 
 ## Ссылки на проект
 
-IP-адрес x.x.x.x
+IP-адрес 51.250.21.61
 
-Frontend https://...
+Frontend https://mesto.svyat.nomoredomainsicu.ru
 
-Backend https://...
+Backend https://api.mesto.svyat.nomoredomainsicu.ru

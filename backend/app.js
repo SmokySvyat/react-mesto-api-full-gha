@@ -24,7 +24,7 @@ app.use('/*', (req, res) => {
   res.status(404).send({ message: 'Такой страницы не существует' });
 });
 
-mongoose.connect('mongodb://localhost:27017/testdb')
+mongoose.connect('mongodb://127.0.0.1:27017/testdb')
   .then(() => console.log('Connected to the server'))
   .catch((err) => console.log(err));
 

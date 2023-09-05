@@ -17,7 +17,7 @@ app.use(cookieParser());
 
 app.use(router);
 
-router.get('/crash-test', () => {
+app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);

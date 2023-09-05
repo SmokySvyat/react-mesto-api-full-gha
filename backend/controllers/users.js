@@ -2,8 +2,10 @@ const { ValidationError, CastError } = require('mongoose').Error;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const {
-  JWT_SECRET, ERROR_CODE_UNIQUE, STATUS_OK, CREATED,
+  ERROR_CODE_UNIQUE, STATUS_OK, CREATED,
 } = require('../utils/constants');
 const BadRequest = require('../utils/errors/BadRequest');
 const NotFound = require('../utils/errors/NotFound');
@@ -111,8 +113,8 @@ const login = (req, res, next) => {
       bcrypt.compare(String(password), user.password)
         .then((isValidUser) => {
           if (isValidUser) {
-            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
-            res.send({ token: newToken });
+            const newToken = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', { expiresIn: '7d' });
+            res.send({ newToken });
           } else {
             next(new ErrorAccess('Неверный логин или пароль'));
           }

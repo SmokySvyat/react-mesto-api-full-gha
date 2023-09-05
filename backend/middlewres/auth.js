@@ -5,7 +5,7 @@ const ErrorAccess = require('../utils/errors/ErrorAccess');
 const handleAuthError = (req, res, next) => next(new ErrorAccess('Необходима авторизация'));
 // eslint-disable-next-line consistent-return
 const auth = (req, res, next) => {
-  const { token } = req.cookies;
+  const token = req.cookies.userId;
   try {
     if (!token) {
       return handleAuthError(req, res, next);

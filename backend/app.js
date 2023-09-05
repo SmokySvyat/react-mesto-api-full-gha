@@ -15,13 +15,13 @@ app.use(requestLogger);
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.get('/crash-test', () => {
+app.use(router);
+
+router.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
-
-app.use(router);
 
 app.use(errorLogger);
 

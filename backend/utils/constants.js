@@ -1,4 +1,4 @@
-const JWT_SECRET = process.env;
+const JWT_SECRET = '64e4e8f5bae743f9e6f91309';
 const STATUS_OK = 200;
 const CREATED = 201;
 const INVAILD_ID = 'NotValidId';

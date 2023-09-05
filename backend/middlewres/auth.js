@@ -4,29 +4,20 @@ const ErrorAccess = require('../utils/errors/ErrorAccess');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-const HandleAuthError = (req, res, next) => next(new ErrorAccess('Необходима авторизация'));
+const handleAuthError = (req, res, next) => next(new ErrorAccess('Необходима авторизация'));
 // eslint-disable-next-line consistent-return
 const auth = (req, res, next) => {
-  const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(new HandleAuthError('Необходимо авторизоваться'));
-    return;
-  }
-
-  const token = authorization.replace('Bearer ', '');
-
-  let payload;
-
+  const token = req.headers.authorization;
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key');
+    if (!token) {
+      return handleAuthError(req, res, next);
+    }
+    const payload = jwt.verify(token.replace('Bearer ', ''), JWT_SECRET);
+    req.user = payload;
+    next();
   } catch (err) {
-    next(new HandleAuthError('Необходимо авторизоваться'));
-    return;
+    return handleAuthError(req, res, next);
   }
-
-  req.user = payload;
-  next();
 };
 
 module.exports = auth;

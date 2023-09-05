@@ -2,7 +2,7 @@ const { ValidationError, CastError } = require('mongoose').Error;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET } = require('../utils/constants');
 
 const {
   ERROR_CODE_UNIQUE, STATUS_OK, CREATED,
@@ -106,6 +106,7 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
+
   User.findOne({ email })
     .select('+password')
     .orFail(new ErrorAccess('Пользователь не найден'))
@@ -113,8 +114,8 @@ const login = (req, res, next) => {
       bcrypt.compare(String(password), user.password)
         .then((isValidUser) => {
           if (isValidUser) {
-            const newToken = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', { expiresIn: '7d' });
-            res.send({ newToken });
+            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
+            res.send({ token: newToken });
           } else {
             next(new ErrorAccess('Неверный логин или пароль'));
           }

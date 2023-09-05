@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 // const { JWT_SECRET } = require('../utils/constants');
 const ErrorAccess = require('../utils/errors/ErrorAccess');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 const handleAuthError = (req, res, next) => next(new ErrorAccess('Необходима авторизация'));
 // eslint-disable-next-line consistent-return

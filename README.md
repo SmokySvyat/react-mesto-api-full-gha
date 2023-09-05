@@ -10,7 +10,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 51.250.21.61
+IP 51.250.21.61
 
 Frontend https://mesto.svyat.nomoredomainsicu.ru
 

@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -9,6 +10,7 @@ const { requestLogger, errorLogger } = require('./middlewres/logger');
 
 const { PORT = 3000 } = process.env;
 const app = express();
+app.use(cors());
 app.use(requestLogger);
 
 app.use(bodyParser.json());

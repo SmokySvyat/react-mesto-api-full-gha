@@ -4,14 +4,14 @@ const { validateUserAuth, validateUserCreate } = require('../utils/validator');
 const { createUser, login } = require('../controllers/users');
 const auth = require('../middlewres/auth');
 
+router.post('/signup', validateUserCreate, createUser);
+router.post('/signin', validateUserAuth, login);
+
 router.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
-
-router.post('/signup', validateUserCreate, createUser);
-router.post('/signin', validateUserAuth, login);
 
 router.use(auth);
 

@@ -8,7 +8,7 @@ const {
 const BadRequest = require('../utils/errors/BadRequest');
 const NotFound = require('../utils/errors/NotFound');
 const NotUnique = require('../utils/errors/NotUnique');
-const ErrorAccess = require('../utils/errors/ErrorAccess');
+// const ErrorAccess = require('../utils/errors/ErrorAccess');
 
 const User = require('../models/user');
 
@@ -105,7 +105,7 @@ const updateAvatar = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  return User.findUserByCredentials(email, password)
+  return User.findOne(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.send({ token });

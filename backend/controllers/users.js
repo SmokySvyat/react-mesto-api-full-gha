@@ -8,7 +8,7 @@ const {
 const BadRequest = require('../utils/errors/BadRequest');
 const NotFound = require('../utils/errors/NotFound');
 const NotUnique = require('../utils/errors/NotUnique');
-// const ErrorAccess = require('../utils/errors/ErrorAccess');
+const ErrorAccess = require('../utils/errors/ErrorAccess');
 
 const User = require('../models/user');
 
@@ -104,13 +104,25 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-
-  return User.findOne(email, password)
+  User.findOne({ email })
+    .select('+password')
+    .orFail(new ErrorAccess('Пользователь не найден'))
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-      res.send({ token });
+      bcrypt.compare(String(password), user.password)
+        .then((isValidUser) => {
+          if (isValidUser) {
+            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
+            res.cookie('token', newToken, {
+              maxAge: 36000 * 24 * 7,
+              httpOnly: true,
+              sameSite: true,
+            }).send({ newToken });
+          } else {
+            next(new ErrorAccess('Неверный логин или пароль'));
+          }
+        });
     })
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 module.exports = {

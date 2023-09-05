@@ -1,4 +1,3 @@
-const JWT_SECRET = '64e4e8f5bae743f9e6f91309';
 const STATUS_OK = 200;
 const CREATED = 201;
 const INVAILD_ID = 'NotValidId';
@@ -8,7 +7,6 @@ const ERROR_NOT_FOUND = 404;
 const INTERNAL_CODE = 500;
 
 module.exports = {
-  JWT_SECRET,
   STATUS_OK,
   CREATED,
   INVAILD_ID,

@@ -74,7 +74,7 @@ class Api {
   };
 
 export const api = new Api ({
-  url: 'https://mesto.nomoreparties.co/v1/cohort-64/',
+  url: 'https://api.mesto.svyat.nomoredomainsicu.ru',
   headers: {
     authorization: '476fa7c1-24a0-4703-9208-cf8aef471951',
     'content-type': 'application/json'

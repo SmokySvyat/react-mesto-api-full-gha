@@ -8,7 +8,7 @@ const ERROR_NOT_FOUND = 404;
 const INTERNAL_CODE = 500;
 
 module.exports = {
-  JWT_SECRET,
+  // JWT_SECRET,
   STATUS_OK,
   CREATED,
   INVAILD_ID,

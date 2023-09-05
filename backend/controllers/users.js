@@ -104,25 +104,13 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email })
-    .select('+password')
-    .orFail(new ErrorAccess('Пользователь не найден'))
+
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      bcrypt.compare(String(password), user.password)
-        .then((isValidUser) => {
-          if (isValidUser) {
-            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
-            res.cookie('token', newToken, {
-              maxAge: 36000 * 24 * 7,
-              httpOnly: true,
-              sameSite: true,
-            }).send({ newToken });
-          } else {
-            next(new ErrorAccess('Неверный логин или пароль'));
-          }
-        });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+      res.send({ token });
     })
-    .catch(next);
+    .catch((err) => next(err));
 };
 
 module.exports = {

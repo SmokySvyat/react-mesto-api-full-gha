@@ -23,11 +23,7 @@ app.use(requestLogger);
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
+app.get('/crash-test');
 
 app.use('/', authRouter);
 app.use('/cards', auth, cardsRouter);

@@ -75,8 +75,5 @@ class Api {
 
 export const api = new Api ({
   url: 'https://api.mesto.svyat.nomoredomainsicu.ru',
-  headers: {
-    'content-type': 'application/json'
-  }
   }
 );

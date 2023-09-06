@@ -5,22 +5,37 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const errorHandler = require('./middlewres/error');
-const router = require('./routes');
+// const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewres/logger');
 
+const auth = require('./middlewres/auth');
+const cardsRouter = require('./routes/cards');
+const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
+const NotFound = require('./utils/errors/NotFound');
+
 const app = express();
-router.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
 app.use(cors());
 app.use(requestLogger);
 
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(router);
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
+app.use('/', authRouter);
+app.use('/cards', auth, cardsRouter);
+app.use('/users', auth, usersRouter);
+
+app.use('*', (req, res, next) => {
+  next(new NotFound('Такой страницы не существует'));
+});
+
+// app.use(router);
 
 app.use(errorLogger);
 

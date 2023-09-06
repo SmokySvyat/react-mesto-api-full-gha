@@ -121,6 +121,10 @@ const login = (req, res, next) => {
     });
 };
 
+const logout = (req, res) => {
+  res.clearCookie('userId').send({ message: 'Вы успешно вышли из профиля' });
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -130,4 +134,5 @@ module.exports = {
   login,
   getCurrentUser,
   findById,
+  logout,
 };

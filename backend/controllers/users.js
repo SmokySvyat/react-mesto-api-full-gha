@@ -8,7 +8,7 @@ const {
 const BadRequest = require('../utils/errors/BadRequest');
 const NotFound = require('../utils/errors/NotFound');
 const NotUnique = require('../utils/errors/NotUnique');
-const ErrorAccess = require('../utils/errors/ErrorAccess');
+// const ErrorAccess = require('../utils/errors/ErrorAccess');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -106,25 +106,19 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email })
-    .select('+password')
-    .orFail(new ErrorAccess('Пользователь не найден'))
+  return User.findUserByCredentials({ email, password })
     .then((user) => {
-      bcrypt.compare(String(password), user.password)
-        .then((isValidUser) => {
-          if (isValidUser) {
-            const newToken = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-            res.cookie('token', newToken, {
-              maxAge: 36000 * 24 * 7,
-              httpOnly: true,
-              sameSite: true,
-            }).send({ newToken });
-          } else {
-            next(new ErrorAccess('Неверный логин или пароль'));
-          }
-        });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+      res.cookie('userId', token, {
+        maxAge: 604800000,
+        httpOnly: true,
+        sameSite: true,
+      });
+      res.send(user);
     })
-    .catch(next);
+    .catch((error) => {
+      next(error);
+    });
 };
 
 module.exports = {

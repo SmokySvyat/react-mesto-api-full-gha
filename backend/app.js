@@ -15,7 +15,7 @@ const authRouter = require('./routes/auth');
 const NotFound = require('./utils/errors/NotFound');
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: ['http://localhost:3001', 'mesto.svyat.nomoredomainsicu.ru'], credentials: true }));
 app.use(requestLogger);
 
 app.use(bodyParser.json());

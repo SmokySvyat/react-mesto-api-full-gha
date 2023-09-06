@@ -106,6 +106,7 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
+
   User.findOne({ email })
     .select('+password')
     .orFail(new ErrorAccess('Пользователь не найден'))

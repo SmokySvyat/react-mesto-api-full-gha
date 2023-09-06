@@ -9,6 +9,11 @@ const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewres/logger');
 
 const app = express();
+router.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 app.use(cors());
 app.use(requestLogger);
 

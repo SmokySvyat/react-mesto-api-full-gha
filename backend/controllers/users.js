@@ -8,7 +8,7 @@ const {
 const BadRequest = require('../utils/errors/BadRequest');
 const NotFound = require('../utils/errors/NotFound');
 const NotUnique = require('../utils/errors/NotUnique');
-// const ErrorAccess = require('../utils/errors/ErrorAccess');
+const ErrorAccess = require('../utils/errors/ErrorAccess');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -41,7 +41,7 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt.hash(password, 10)
+  return bcrypt.hash(String(password), 10)
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
@@ -106,23 +106,25 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  return User.findUserByCredentials({ email, password })
+  User.findOne({ email })
+    .select('+password')
+    .orFail(new ErrorAccess('Пользователь не найден'))
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-      res.cookie('userId', token, {
-        maxAge: 604800000,
-        httpOnly: true,
-        sameSite: true,
-      });
-      res.send(user);
+      bcrypt.compare(String(password), user.password)
+        .then((isValidUser) => {
+          if (isValidUser) {
+            const newToken = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+            res.cookie('token', newToken, {
+              maxAge: 36000 * 24 * 7,
+              httpOnly: true,
+              sameSite: true,
+            }).send({ newToken });
+          } else {
+            next(new ErrorAccess('Неверный логин или пароль'));
+          }
+        });
     })
-    .catch((error) => {
-      next(error);
-    });
-};
-
-const logout = (req, res) => {
-  res.clearCookie('userId').send({ message: 'Вы успешно вышли из профиля' });
+    .catch(next);
 };
 
 module.exports = {
@@ -134,5 +136,4 @@ module.exports = {
   login,
   getCurrentUser,
   findById,
-  logout,
 };

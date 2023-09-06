@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const errorHandler = require('./middlewres/error');
 // const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewres/logger');
@@ -15,17 +16,18 @@ const authRouter = require('./routes/auth');
 const NotFound = require('./utils/errors/NotFound');
 
 const app = express();
+app.use(helmet());
 app.use(cors());
 app.use(requestLogger);
 
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// app.get('/crash-test', () => {
-//   setTimeout(() => {
-//     throw new Error('Сервер сейчас упадёт');
-//   }, 0);
-// });
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.use('/', authRouter);
 app.use('/cards', auth, cardsRouter);

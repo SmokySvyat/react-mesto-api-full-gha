@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -5,6 +7,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
+
 const errorHandler = require('./middlewres/error');
 const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewres/logger');
@@ -16,15 +19,15 @@ const { requestLogger, errorLogger } = require('./middlewres/logger');
 // const NotFound = require('./utils/errors/NotFound');
 
 const app = express();
+
 app.use(cors());
 app.use(helmet());
-
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
-  .then(() => console.log('Connected to the data base'));
-
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(requestLogger);
+
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
+  .then(() => console.log('Connected to the data base'));
 
 // app.get('/crash-test', () => {
 //   setTimeout(() => {

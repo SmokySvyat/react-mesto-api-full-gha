@@ -107,23 +107,20 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email })
+  return User.findOne({ email })
     .select('+password')
-    .orFail(new ErrorAccess('Пользователь не найден'))
+    .orFail(() => new ErrorAccess('Пользователь не найден'))
     .then((user) => {
-      bcrypt.compare(String(password), user.password)
-        .then((isValidUser) => {
-          if (isValidUser) {
-            const newToken = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-            res.cookie('token', newToken, {
-              maxAge: 36000 * 24 * 7,
-              httpOnly: true,
-              sameSite: true,
-            }).send({ newToken });
+      bcrypt.compare(password, user.password)
+        .then((validUser) => {
+          if (validUser) {
+            const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', { expiresIn: '7d' });
+            res.send({ token });
           } else {
-            next(new ErrorAccess('Неверный логин или пароль'));
+            throw new ErrorAccess('Передан неверный логин или пароль');
           }
-        });
+        })
+        .catch(next);
     })
     .catch(next);
 };

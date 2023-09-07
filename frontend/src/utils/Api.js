@@ -41,7 +41,7 @@ class Api {
     getCard() {
       return fetch(`${this._baseUrl}cards`, {
         headers: this._headers
-      }). then(res => this._isResultOk(res))
+      }).then(res => this._isResultOk(res))
     };
   
     postCard(data) {

@@ -6,13 +6,9 @@ const {
 } = require('../controllers/cards');
 
 router.post('/', validateCard, createCard);
-
 router.get('/', getCards);
-
 router.delete('/:cardId', validateCardID, deleteCard);
-
 router.put('/:cardId/likes', validateCardID, likeCard);
-
 router.delete('/:cardId/likes', validateCardID, dislikeCard);
 
 module.exports = router;

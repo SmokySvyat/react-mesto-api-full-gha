@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.mesto.svyat.nomoredomainsicu.ru";
+export const BASE_URL = "https://api.mesto.svyat.nomoredomainsicu.ru/";
 
 const checkResponse = (res) => {
   if (res.ok) {

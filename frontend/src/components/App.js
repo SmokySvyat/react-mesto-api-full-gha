@@ -38,13 +38,13 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    Promise.all([api.getProfile(), api.getCard()])
+    loggedIn && Promise.all([api.getProfile(), api.getCard()])
     .then(([user, cards]) => {
       setCurrentUser(user)
       setCards(cards)
     })
     .catch((err) => console.log(err))
-  },[])
+  },[loggedIn])
 
   const handleEditAvatarClick = () => {
     setAvatarPopupOpen(true)

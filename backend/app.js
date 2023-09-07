@@ -17,7 +17,7 @@ const { requestLogger, errorLogger } = require('./middlewres/logger');
 
 const app = express();
 app.use(helmet());
-app.use(cors({ origin: ['http://localhost:3000', 'mesto.svyat.nomoredomainsicu.ru'], credentials: true }));
+app.use(cors({ origin: ['http://localhost:3001', 'mesto.svyat.nomoredomainsicu.ru'], credentials: true }));
 app.use(requestLogger);
 
 app.use(bodyParser.json());

@@ -17,11 +17,11 @@ const { requestLogger, errorLogger } = require('./middlewres/logger');
 
 const app = express();
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: ['http://localhost:3000', 'mesto.svyat.nomoredomainsicu.ru'], credentials: true }));
 app.use(requestLogger);
 
 app.use(bodyParser.json());
-app.use(cookieParser({ origin: ['http://localhost:3000', 'mesto.svyat.nomoredomainsicu.ru'], credentials: true }));
+app.use(cookieParser());
 
 // app.get('/crash-test', () => {
 //   setTimeout(() => {

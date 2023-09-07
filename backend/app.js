@@ -16,12 +16,15 @@ const { requestLogger, errorLogger } = require('./middlewres/logger');
 // const NotFound = require('./utils/errors/NotFound');
 
 const app = express();
-app.use(helmet());
 app.use(cors());
-app.use(requestLogger);
+app.use(helmet());
+
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
+  .then(() => console.log('Connected to the data base'));
 
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(requestLogger);
 
 // app.get('/crash-test', () => {
 //   setTimeout(() => {
@@ -40,12 +43,8 @@ app.use(cookieParser());
 app.use(router);
 
 app.use(errorLogger);
-
 app.use(errors());
 app.use(errorHandler);
-
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
-  .then(() => console.log('Connected to the data base'));
 
 app.listen(3000, () => {
   console.log('App listening on port 3000');

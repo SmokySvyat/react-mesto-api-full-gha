@@ -21,7 +21,7 @@ app.use(cors());
 app.use(requestLogger);
 
 app.use(bodyParser.json());
-app.use(cookieParser({ origin: ['http://localhost:3001', 'mesto.svyat.nomoredomainsicu.ru'], credentials: true }));
+app.use(cookieParser({ origin: ['http://localhost:3000', 'mesto.svyat.nomoredomainsicu.ru'], credentials: true }));
 
 app.get('/crash-test', () => {
   setTimeout(() => {

@@ -18,7 +18,6 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(cookieParser());
-
 app.use(requestLogger);
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb')

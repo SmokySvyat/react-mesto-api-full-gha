@@ -108,6 +108,7 @@ const updateAvatar = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
   console.log(JWT_SECRET);
+
   User.findOne({ email })
     .select('+password')
     .orFail(new ErrorAccess('Пользователь не найден'))

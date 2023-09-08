@@ -43,8 +43,8 @@ function App() {
       setCurrentUser(user)
       setCards(cards)
     })
-    .catch((err) => console.log(err.message))
-  },[loggedIn])
+    .catch((err) => console.log(err))
+  }, [loggedIn])
 
   const handleEditAvatarClick = () => {
     setAvatarPopupOpen(true)
@@ -176,6 +176,7 @@ function App() {
           setLoggedIn(true);
           setUserEmail(email);
           navigate("/users/me");
+          setCurrentUser(data)
         }
       })
       .catch((err) => console.log(err));
@@ -202,6 +203,8 @@ function App() {
 
   const signOut = () => {
     localStorage.removeItem("jwt");
+    setLoggedIn(false);
+    setCurrentUser('');
     navigate("/sign-in");
   };
 

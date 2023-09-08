@@ -34,6 +34,7 @@ const getUser = (req, res, next) => {
 
 const getCurrentUser = (req, res, next) => {
   const { _id } = req.user;
+  console.log(`текущий пользователь: ${_id}`);
   findById(req, res, next, _id);
 };
 
@@ -113,11 +114,18 @@ const login = (req, res, next) => {
     .select('+password')
     .orFail(new ErrorAccess('Пользователь не найден'))
     .then((user) => {
+      console.log(user);
       bcrypt.compare(String(password), user.password)
         .then((isValidUser) => {
           if (isValidUser) {
             const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
-            res.send({ token: newToken });
+            res.send({
+              id: user._id,
+              token: newToken,
+              name: user.name,
+              about: user.about,
+              avatar: user.avatar,
+            });
           } else {
             next(new ErrorAccess({ message: 'Неверный логин или пароль' }));
           }

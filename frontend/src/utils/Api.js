@@ -13,7 +13,10 @@ class Api {
   
     getProfile() {
       return fetch(`${this._baseUrl}users/me`, {
-          headers: this._headers
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('jwt')}`,
+          'content-type': 'application/json'
+        }
         })
           .then(res => this._isResultOk(res))
     };
@@ -21,7 +24,10 @@ class Api {
     patchProfile(values) {
       return fetch(`${this._baseUrl}users/me`, {
         method: 'PATCH',
-        headers: this._headers,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('jwt')}`,
+          'content-type': 'application/json'
+        },
         body: JSON.stringify(values)
       })
       .then(res => this._isResultOk(res))
@@ -30,7 +36,10 @@ class Api {
     setUserAvatar({avatar}) {
       return fetch(`${this._baseUrl}users/me/avatar`, {
         method: 'PATCH',
-        headers: this._headers,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('jwt')}`,
+          'content-type': 'application/json'
+        },
         body: JSON.stringify({
           avatar
         })
@@ -40,14 +49,20 @@ class Api {
   
     getCard() {
       return fetch(`${this._baseUrl}cards`, {
-        headers: this._headers
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('jwt')}`,
+          'content-type': 'application/json'
+        }
       }).then(res => this._isResultOk(res))
     };
   
     postCard(data) {
       return fetch(`${this._baseUrl}cards`, {
         method: 'POST',
-        headers: this._headers,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('jwt')}`,
+          'content-type': 'application/json'
+        },
         body: JSON.stringify({
           name: data.place,
           link: data.link
@@ -59,7 +74,10 @@ class Api {
     deleteCard(cardId) {
       return fetch(`${this._baseUrl}cards/${cardId}`, {
         method: "DELETE",
-        headers: this._headers,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('jwt')}`,
+          'content-type': 'application/json'
+        },
       }).then(this._isResultOk);
     }
   
@@ -67,20 +85,26 @@ class Api {
       if (!isLiked) {
         return fetch(`${this._baseUrl}cards/${cardId}/likes`, {
           method: "PUT",
-          headers: this._headers
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('jwt')}`,
+            'content-type': 'application/json'
+          }
         }).then(this._isResultOk);
       } else {
         return fetch(`${this._baseUrl}cards/${cardId}/likes`, {
           method: "DELETE",
-          headers: this._headers,
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('jwt')}`,
+            'content-type': 'application/json'
+          },
         }).then(this._isResultOk);
       }
     }
   };
 
 export const api = new Api ({
-  url: 'https://api.mesto.svyat.nomoredomainsicu.ru/',
-    // url: 'http://localhost:3001/',
+  // url: 'https://api.mesto.svyat.nomoredomainsicu.ru/',
+    url: 'http://localhost:3000/',
   headers: {
     authorization: `Bearer ${localStorage.getItem('jwt')}`,
     'content-type': 'application/json'

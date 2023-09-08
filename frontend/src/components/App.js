@@ -187,8 +187,8 @@ function App() {
       auth.getContent(jwt)
         .then((res) => {
           if (res) {
-            setUserEmail(res.email)
             setLoggedIn(true);
+            setUserEmail({email: res.email})
             navigate("/users/me");
           }
         })

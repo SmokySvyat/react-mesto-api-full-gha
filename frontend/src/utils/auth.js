@@ -1,5 +1,5 @@
 export const BASE_URL = "https://api.mesto.svyat.nomoredomainsicu.ru";
-
+// export const BASE_URL = "http://localhost:3001";
 const checkResponse = (res) => {
   if (res.ok) {
     return res.json();

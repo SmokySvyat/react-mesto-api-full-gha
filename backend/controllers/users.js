@@ -10,7 +10,7 @@ const NotFound = require('../utils/errors/NotFound');
 const NotUnique = require('../utils/errors/NotUnique');
 const ErrorAccess = require('../utils/errors/ErrorAccess');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 const User = require('../models/user');
 
@@ -78,7 +78,7 @@ const updateProfileInfo = (req, res, next) => {
     })
     .catch((err) => {
       if (err instanceof ValidationError || err instanceof CastError) {
-        next(new BadRequest('Данные введены некорректно'));
+        next(new BadRequest('Данные введены некоректно'));
       } else {
         next(err);
       }
@@ -89,12 +89,12 @@ const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   const { _id } = req.user;
 
-  User.findByIdAndUpdate({ _id }, { avatar }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new NotFound('Пользователь по указанному id не найден');
       }
-      res.status(STATUS_OK).send(user);
+      res.status(STATUS_OK).json(user);
     })
     .catch((err) => {
       if (err instanceof ValidationError || err instanceof CastError) {
@@ -107,29 +107,21 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  return User.findOne({ email })
+  User.findOne({ email })
     .select('+password')
-    .orFail(() => new ErrorAccess('Пользователь не найден'))
+    .orFail(new ErrorAccess('Пользователь не найден'))
     .then((user) => {
-      console.log(user);
-      bcrypt.compare(password, user.password)
-        .then((validUser) => {
-          if (validUser) {
-            const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', { expiresIn: '7d' });
-            res.send({ token });
-            console.log(token);
-            console.log(res);
+      bcrypt.compare(String(password), user.password)
+        .then((isValidUser) => {
+          if (isValidUser) {
+            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
+            res.send({ token: newToken });
           } else {
-            throw new ErrorAccess('Передан неверный логин или пароль');
+            next(new ErrorAccess({ message: 'Неверный логин или пароль' }));
           }
-        })
-        .catch(next);
+        });
     })
     .catch(next);
-};
-
-const logout = (req, res) => {
-  res.clearCookie('userId').send({ message: 'Вы успешно вышли из профиля' });
 };
 
 module.exports = {
@@ -141,5 +133,4 @@ module.exports = {
   login,
   getCurrentUser,
   findById,
-  logout,
 };

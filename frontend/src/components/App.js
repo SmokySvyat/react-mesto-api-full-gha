@@ -43,7 +43,7 @@ function App() {
       setCurrentUser(user)
       setCards(cards)
     })
-    .catch((err) => console.log(err))
+    .catch((err) => console.log(err.message))
   },[loggedIn])
 
   const handleEditAvatarClick = () => {
@@ -53,7 +53,8 @@ function App() {
   const handleUpdateAvatar = (value) => {
     setIsLoading(true);
 
-    api.setUserAvatar(value)
+    api
+      .setUserAvatar(value)
       .then((res) => {
         setCurrentUser(res);
         closeAllPopups();
@@ -106,12 +107,12 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
     api.like(card._id, isLiked)
       .then((newCard) => {
         setCards((state) =>
-          state.map((i) => (i._id === card._id ? newCard : i))
+          state.map((j) => (j._id === card._id ? newCard : j))
         );
       })
       .catch((err) => console.log(err));
@@ -186,7 +187,7 @@ function App() {
       auth.getContent(jwt)
         .then((res) => {
           if (res) {
-            setUserEmail(res.data.email)
+            setUserEmail(res.email)
             setLoggedIn(true);
             navigate("/users/me");
           }

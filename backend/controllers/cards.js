@@ -24,6 +24,7 @@ const createCard = (req, res, next) => {
       }
     });
 };
+
 const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => {
@@ -33,11 +34,13 @@ const getCards = (req, res, next) => {
     })
     .catch(next);
 };
+
 const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   const { _id } = req.user;
   Card.findById(cardId)
     .orFail(new NotFound('Карточка с указанным id не найдена'))
+    // eslint-disable-next-line consistent-return
     .then((card) => {
       if (card.owner.toString() !== _id) {
         return Promise.reject(new Forbidden('У пользователя нет возможности удалять карточки других пользователей'));
@@ -47,6 +50,7 @@ const deleteCard = (req, res, next) => {
     })
     .catch(next);
 };
+
 const likeCard = (req, res, next) => {
   const { _id } = req.user;
   Card.findByIdAndUpdate(
@@ -70,6 +74,7 @@ const likeCard = (req, res, next) => {
       }
     });
 };
+
 const dislikeCard = (req, res, next) => {
   const { _id } = req.user;
   Card.findByIdAndUpdate(
@@ -93,6 +98,7 @@ const dislikeCard = (req, res, next) => {
       }
     });
 };
+
 module.exports = {
   createCard, getCards, deleteCard, likeCard, dislikeCard,
 };

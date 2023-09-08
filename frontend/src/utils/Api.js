@@ -28,14 +28,14 @@ class Api {
     };
 
     setUserAvatar({avatar}) {
-      return fetch(`${this._baseUrl}/users/me/avatar`, {
+      return fetch(`${this._baseUrl}users/me/avatar`, {
         method: 'PATCH',
         headers: this._headers,
         body: JSON.stringify({
-          avatar: avatar
+          avatar
         })
       })
-      .then(res => this._isResultOk(res))
+      .then(this._isResultOk)
     };
   
     getCard() {
@@ -58,23 +58,29 @@ class Api {
 
     deleteCard(cardId) {
       return fetch(`${this._baseUrl}cards/${cardId}`, {
-        method: 'DELETE',
-        headers: this._headers
-      })
-      .then(res => this._isResultOk(res))
+        method: "DELETE",
+        headers: this._headers,
+      }).then(this._isResultOk);
     }
-
+  
     like(cardId, isLiked) {
+      if (!isLiked) {
         return fetch(`${this._baseUrl}cards/${cardId}/likes`, {
-          method: isLiked ? 'DELETE' : 'PUT',
+          method: "PUT",
           headers: this._headers
-        })
-        .then((res) => this._isResultOk(res))
+        }).then(this._isResultOk);
+      } else {
+        return fetch(`${this._baseUrl}cards/${cardId}/likes`, {
+          method: "DELETE",
+          headers: this._headers,
+        }).then(this._isResultOk);
       }
+    }
   };
 
 export const api = new Api ({
   url: 'https://api.mesto.svyat.nomoredomainsicu.ru/',
+    // url: 'http://localhost:3001/',
   headers: {
     authorization: `Bearer ${localStorage.getItem('jwt')}`,
     'content-type': 'application/json'

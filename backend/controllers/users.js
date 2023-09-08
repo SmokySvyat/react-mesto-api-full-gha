@@ -111,11 +111,14 @@ const login = (req, res, next) => {
     .select('+password')
     .orFail(() => new ErrorAccess('Пользователь не найден'))
     .then((user) => {
+      console.log(user);
       bcrypt.compare(password, user.password)
         .then((validUser) => {
           if (validUser) {
             const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', { expiresIn: '7d' });
             res.send({ token });
+            console.log(token);
+            console.log(res);
           } else {
             throw new ErrorAccess('Передан неверный логин или пароль');
           }

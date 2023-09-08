@@ -10,7 +10,7 @@ const NotFound = require('../utils/errors/NotFound');
 const NotUnique = require('../utils/errors/NotUnique');
 const ErrorAccess = require('../utils/errors/ErrorAccess');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 const User = require('../models/user');
 
@@ -118,12 +118,8 @@ const login = (req, res, next) => {
       bcrypt.compare(String(password), user.password)
         .then((isValidUser) => {
           if (isValidUser) {
-            const newToken = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-            res.cookie('token', newToken, {
-              maxAge: 36000 * 24 * 7,
-              httpOnly: true,
-              sameSite: true,
-            }).send({
+            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
+            res.send({
               id: user._id,
               token: newToken,
               name: user.name,

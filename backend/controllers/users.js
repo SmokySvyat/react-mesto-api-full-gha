@@ -10,7 +10,7 @@ const NotFound = require('../utils/errors/NotFound');
 const NotUnique = require('../utils/errors/NotUnique');
 const ErrorAccess = require('../utils/errors/ErrorAccess');
 
-const { JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const User = require('../models/user');
 
@@ -109,17 +109,18 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email })
     .select('+password')
-    .orFail(new ErrorAccess('Пользователь не найден'))
+    .orFail(() => new ErrorAccess('Пользователь не найден'))
     .then((user) => {
-      bcrypt.compare(String(password), user.password)
-        .then((isValidUser) => {
-          if (isValidUser) {
-            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
-            res.send({ token: newToken });
+      bcrypt.compare(password, user.password)
+        .then((validUser) => {
+          if (validUser) {
+            const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', { expiresIn: '7d' });
+            res.send({ token });
           } else {
-            next(new ErrorAccess({ message: 'Неверный логин или пароль' }));
+            throw new ErrorAccess('Передан неверный логин или пароль');
           }
-        });
+        })
+        .catch(next);
     })
     .catch(next);
 };

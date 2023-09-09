@@ -5,6 +5,7 @@ const ERROR_CODE_UNIQUE = 11000;
 const BAD_REQUEST_CODE = 400;
 const ERROR_NOT_FOUND = 404;
 const INTERNAL_CODE = 500;
+const DEV_SECRET = 'dev-secret';
 
 module.exports = {
   STATUS_OK,
@@ -14,4 +15,5 @@ module.exports = {
   ERROR_CODE_UNIQUE,
   BAD_REQUEST_CODE,
   INTERNAL_CODE,
+  DEV_SECRET,
 };

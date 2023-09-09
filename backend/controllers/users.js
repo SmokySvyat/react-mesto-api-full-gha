@@ -3,14 +3,14 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const {
-  ERROR_CODE_UNIQUE, STATUS_OK, CREATED,
+  ERROR_CODE_UNIQUE, STATUS_OK, CREATED, DEV_SECRET,
 } = require('../utils/constants');
 const BadRequest = require('../utils/errors/BadRequest');
 const NotFound = require('../utils/errors/NotFound');
 const NotUnique = require('../utils/errors/NotUnique');
 const ErrorAccess = require('../utils/errors/ErrorAccess');
 
-const { JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const User = require('../models/user');
 
@@ -34,7 +34,7 @@ const getUser = (req, res, next) => {
 
 const getCurrentUser = (req, res, next) => {
   const { _id } = req.user;
-  console.log(`текущий пользователь: ${_id}`);
+  // console.log(`текущий пользователь: ${_id}`);
   findById(req, res, next, _id);
 };
 
@@ -108,17 +108,17 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  console.log(JWT_SECRET);
+  // console.log(JWT_SECRET);
 
   User.findOne({ email })
     .select('+password')
     .orFail(new ErrorAccess('Пользователь не найден'))
     .then((user) => {
-      console.log(user);
-      bcrypt.compare(String(password), user.password)
+      // console.log(user);
+      bcrypt.compare(password, user.password)
         .then((isValidUser) => {
           if (isValidUser) {
-            const newToken = jwt.sign({ _id: user._id }, JWT_SECRET);
+            const newToken = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : DEV_SECRET, { expiresIn: '7d' });
             res.send({
               id: user._id,
               token: newToken,

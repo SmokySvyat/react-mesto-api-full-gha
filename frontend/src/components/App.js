@@ -42,6 +42,7 @@ function App() {
     .then(([user, cards]) => {
       setCurrentUser(user)
       setCards(cards)
+      // console.log(currentUser)
     })
     .catch((err) => console.log(err))
   }, [loggedIn])
@@ -171,8 +172,11 @@ function App() {
   const handleLogin = ({ email,password }) => {
     auth.authorize(email, password)
       .then((data) => {
+        // console.log(data)
+        // console.log(localStorage)
         if (data.token) {
           localStorage.setItem("jwt", data.token);
+          // console.log(localStorage)
           setLoggedIn(true);
           setUserEmail(email);
           navigate("/users/me");
